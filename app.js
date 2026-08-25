@@ -33,6 +33,7 @@ let index = 0;
 let answered = false;
 let results = []; // { question, chosenKey, correct }
 
+const qImage = document.getElementById("qImage");
 const qEs = document.getElementById("qEs");
 const qRu = document.getElementById("qRu");
 const optionsEl = document.getElementById("options");
@@ -60,6 +61,14 @@ function renderQuestion() {
   qEs.textContent = q.es;
   qRu.textContent = q.ru;
 
+  if (q.image) {
+    qImage.src = q.image;
+    qImage.hidden = false;
+  } else {
+    qImage.hidden = true;
+    qImage.removeAttribute("src");
+  }
+
   progressPill.textContent = `${index + 1}/${deck.length}`;
   progressFill.style.width = `${((index + 1) / deck.length) * 100}%`;
 
@@ -77,9 +86,11 @@ function renderQuestion() {
   q.options.forEach((opt) => {
     const btn = document.createElement("button");
     btn.className = "option";
+    const imgHtml = opt.image ? `<img class="option-image" src="${opt.image}" alt="" />` : "";
     btn.innerHTML = `
       <span class="key">${opt.key}</span>
       <span class="txt">
+        ${imgHtml}
         <span class="es">${opt.es}</span>
         <span class="ru">${opt.ru}</span>
       </span>
