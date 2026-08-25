@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Билеты ПДД — Кордоба, категория B</title>
+<meta name="description" content="Квиз для подготовки к теоретическому экзамену на права категории B в Кордобе, Аргентина" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚦</text></svg>" />
+<link rel="stylesheet" href="styles.css" />
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+<div class="tg-banner" id="tgBanner" hidden>
+  Это превью в браузере. Полноценно работает внутри Telegram — открой через бота.
+</div>
+
+<header class="topbar">
+  <div class="title">
+    <strong>Билеты ПДД</strong>
+    <span>Кордоба · Категория B</span>
+  </div>
+  <div class="progress-pill" id="progressPill">1/8</div>
+</header>
+
+<main>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <p class="pending-note" id="pendingImages" hidden></p>
+
+  <section id="quizScreen" class="quiz-screen">
+    <div class="card" id="questionCard">
+      <p class="q-es" id="qEs"></p>
+      <p class="q-ru" id="qRu"></p>
+      <div class="options" id="options"></div>
+      <p class="note" id="note" hidden></p>
+    </div>
+    <button class="next-btn" id="nextBtn" disabled>Далее →</button>
+  </section>
+
+  <section id="resultScreen" class="result-screen" hidden>
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <h1 id="resultScore">8 / 8</h1>
+    <p id="resultText">Отлично! Можно идти сдавать.</p>
+    <div class="result-actions">
+      <button id="retryWrongBtn" hidden>Повторить ошибки</button>
+      <button id="restartBtn">Пройти заново</button>
+    </div>
+    <div class="review" id="review"></div>
+  </section>
+</main>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+name: Set Telegram bot menu button
+
+on:
+  workflow_dispatch:
+    inputs:
+      miniapp_url:
+        description: "URL Mini App (GitHub Pages)"
+        required: false
+        default: "https://gvinp.github.io/cordoba-carnet-quiz/"
+      button_text:
+        description: "Текст кнопки меню"
+        required: false
+        default: "Билеты"
+
+permissions:
+  contents: read
+
+jobs:
+  set-menu-button:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Telegram Bot API setChatMenuButton
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          MINIAPP_URL: ${{ inputs.miniapp_url }}
+          BUTTON_TEXT: ${{ inputs.button_text }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ]; then
+            echo "::error::Секрет TELEGRAM_BOT_TOKEN не задан (Settings → Secrets and variables → Actions)"
+            exit 1
+          fi
+
+          http_code=$(curl -sS -o response.json -w "%{http_code}" \
+            -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setChatMenuButton" \
+            -H "Content-Type: application/json" \
+            -d "{\"menu_button\": {\"type\": \"web_app\", \"text\": \"${BUTTON_TEXT}\", \"web_app\": {\"url\": \"${MINIAPP_URL}\"}}}")
+
+          cat response.json
+          echo
+
+          if [ "$http_code" != "200" ]; then
+            echo "::error::Telegram API вернул HTTP $http_code"
+            exit 1
+          fi
