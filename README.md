@@ -53,3 +53,37 @@ Telegram Mini App для подготовки к теоретическому э
    — он привяжет ссылку на этот квиз как кнопку меню бота через Bot API
    (`setChatMenuButton`), без ручных команд в BotFather
 4. Открой бота в Telegram — кнопка меню откроет квиз внутри приложения
+
+## Бэкенд на Cloudflare Workers (учёт пользователей + приветствие на /start)
+
+`worker/` — Cloudflare Worker на D1, отдельно от статического сайта:
+
+- `POST /telegram-webhook` — вебхук бота; на `/start` отвечает приветствием
+  с кнопкой «Открыть приложение» и сохраняет пользователя в D1
+- `POST /track` — вызывается из мини-аппа (`track.js`) при каждом открытии
+  внутри Telegram; проверяет подпись `initData` (HMAC по алгоритму Telegram)
+  и обновляет запись пользователя — так считаются все заходы, не только
+  через `/start`
+- `GET /stats?key=...` — отдаёт JSON со счётчиками (всего пользователей,
+  сколько раз жали `/start`, активные за 1/7/30 дней, суммарно открытий)
+
+### Деплой воркера
+
+Нужны секреты в **Settings → Secrets and variables → Actions**:
+
+- `CLOUDFLARE_API_TOKEN` — токен с шаблоном **Edit Cloudflare Workers**
+  (dashboard → My Profile → API Tokens → Create Token)
+- `CLOUDFLARE_ACCOUNT_ID` — Account ID (dashboard → Workers & Pages, справа)
+- `TELEGRAM_BOT_TOKEN` — уже должен быть добавлен
+- `WEBHOOK_SECRET` — любая случайная строка (проверяет, что вебхук дёргает
+  именно Telegram)
+- `STATS_KEY` — любая случайная строка (ключ доступа к `/stats`)
+
+Дальше: **Actions → Deploy Cloudflare Worker → Run workflow**. Воркер
+задеплоится, пропишет себе секреты, определит свой `*.workers.dev` адрес и
+сам зарегистрирует вебхук в Telegram (`setWebhook`).
+
+**Важно:** после первого деплоя в `track.js` нужно заменить
+`WORKERS_SUBDOMAIN` в `TRACK_URL` на реальный поддомен воркера (виден в
+логе шага "Deploy worker" или в дашборде Cloudflare) и запушить — иначе
+`/track` не будет вызываться с фронтенда.

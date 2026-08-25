@@ -1,0 +1,8 @@
+name = "cordoba-carnet-bot"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cordoba_carnet_bot"
+database_id = "ec316045-e7f0-4cf6-bd34-44bd895bb087"
