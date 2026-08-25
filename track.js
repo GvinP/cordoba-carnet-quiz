@@ -6,7 +6,7 @@
   var tg = window.Telegram && window.Telegram.WebApp;
   if (!tg || !tg.initData) return;
 
-  var TRACK_URL = "https://cordoba-carnet-bot.WORKERS_SUBDOMAIN.workers.dev/track";
+  var TRACK_URL = "https://cordoba-carnet-bot.a7057940.workers.dev/track";
 
   fetch(TRACK_URL, {
     method: "POST",
