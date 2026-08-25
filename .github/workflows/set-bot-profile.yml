@@ -1,0 +1,61 @@
+name: Set Telegram bot name and description
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Имя бота"
+        required: false
+        default: "Билеты Кордова"
+      description:
+        description: "Описание (большой текст на пустом экране чата, до 512 символов)"
+        required: false
+        default: |
+          🚦 Готовлю к теоретическому экзамену на права категории B в Кордобе.
+
+          205 билетов на испанском и русском, поиск по темам, практика по всем вопросам или как на настоящем экзамене (30 вопросов).
+
+          Жми «Меню» внизу, чтобы начать.
+      short_description:
+        description: "Короткое описание (в профиле бота, до 120 символов)"
+        required: false
+        default: "Билеты ПДД Кордова, категория B — 205 вопросов на испанском и русском, практика и экзамен"
+
+permissions:
+  contents: read
+
+jobs:
+  set-profile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Telegram Bot API
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          BOT_NAME: ${{ inputs.name }}
+          BOT_DESCRIPTION: ${{ inputs.description }}
+          BOT_SHORT_DESCRIPTION: ${{ inputs.short_description }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ]; then
+            echo "::error::Секрет TELEGRAM_BOT_TOKEN не задан (Settings → Secrets and variables → Actions)"
+            exit 1
+          fi
+
+          call() {
+            local method="$1" field="$2" value="$3"
+            http_code=$(curl -sS -o response.json -w "%{http_code}" \
+              -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}" \
+              -H "Content-Type: application/json" \
+              --data-binary @<(python3 -c "import json,sys; print(json.dumps({sys.argv[1]: sys.argv[2]}))" "$field" "$value")
+            )
+            echo "== $method =="
+            cat response.json
+            echo
+            if [ "$http_code" != "200" ]; then
+              echo "::error::$method вернул HTTP $http_code"
+              exit 1
+            fi
+          }
+
+          call "setMyName" "name" "$BOT_NAME"
+          call "setMyDescription" "description" "$BOT_DESCRIPTION"
+          call "setMyShortDescription" "short_description" "$BOT_SHORT_DESCRIPTION"
