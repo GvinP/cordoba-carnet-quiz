@@ -25,10 +25,22 @@ function haptic(style) {
   if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(style);
 }
 
+// --- Mode: "all" (practice, full bank) or "exam" (30 random, pass/fail) ---
+const EXAM_SIZE = 30;
+const EXAM_MAX_WRONG = 4; // pass = at least 26/30 correct (~87%)
+
+const params = new URLSearchParams(location.search);
+const MODE = params.get("mode") === "exam" ? "exam" : "all";
+
 const ANSWERABLE = QUESTIONS.filter((q) => !q.needsImage);
 const PENDING_IMAGES = QUESTIONS.length - ANSWERABLE.length;
 
-let deck = shuffle(ANSWERABLE.slice());
+function freshDeck() {
+  if (MODE === "exam") return shuffle(ANSWERABLE.slice()).slice(0, EXAM_SIZE);
+  return shuffle(ANSWERABLE.slice());
+}
+
+let deck = freshDeck();
 let index = 0;
 let answered = false;
 let results = []; // { question, chosenKey, correct }
@@ -43,6 +55,18 @@ const progressPill = document.getElementById("progressPill");
 const progressFill = document.getElementById("progressFill");
 const quizScreen = document.getElementById("quizScreen");
 const resultScreen = document.getElementById("resultScreen");
+const modeTitleEl = document.getElementById("modeTitle");
+const examRuleEl = document.getElementById("examRule");
+
+if (modeTitleEl) modeTitleEl.textContent = MODE === "exam" ? "Экзамен" : "Практика";
+if (examRuleEl) {
+  if (MODE === "exam") {
+    examRuleEl.hidden = false;
+    examRuleEl.textContent = `Как на настоящем экзамене: ${EXAM_SIZE} вопросов, для сдачи нужно не более ${EXAM_MAX_WRONG} ошибок.`;
+  } else {
+    examRuleEl.hidden = true;
+  }
+}
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -134,13 +158,24 @@ function showResults() {
 
   const total = results.length;
   const correctCount = results.filter((r) => r.correct).length;
+  const wrongCount = total - correctCount;
   const pct = Math.round((correctCount / total) * 100);
 
   document.getElementById("resultScore").textContent = `${correctCount} / ${total}`;
 
   const emojiEl = document.getElementById("resultEmoji");
   const textEl = document.getElementById("resultText");
-  if (pct === 100) {
+
+  if (MODE === "exam" && total === EXAM_SIZE) {
+    const passed = wrongCount <= EXAM_MAX_WRONG;
+    if (passed) {
+      emojiEl.textContent = "✅";
+      textEl.textContent = `Сдал бы! ${wrongCount} ${wrongCount === 1 ? "ошибка" : "ошибки/ошибок"} из допустимых ${EXAM_MAX_WRONG}.`;
+    } else {
+      emojiEl.textContent = "❌";
+      textEl.textContent = `Не сдал бы — ${wrongCount} ошибок, а допустимо не больше ${EXAM_MAX_WRONG}. Разбери ошибки и попробуй ещё раз.`;
+    }
+  } else if (pct === 100) {
     emojiEl.textContent = "🏆";
     textEl.textContent = "Все верно! Можно идти сдавать.";
   } else if (pct >= 80) {
@@ -158,6 +193,9 @@ function showResults() {
   const retryBtn = document.getElementById("retryWrongBtn");
   retryBtn.hidden = wrong.length === 0;
   retryBtn.onclick = () => startQuiz(wrong.map((r) => r.question));
+
+  const restartBtn = document.getElementById("restartBtn");
+  restartBtn.textContent = MODE === "exam" ? "Новый экзамен" : "Пройти заново";
 
   const reviewEl = document.getElementById("review");
   reviewEl.innerHTML = wrong
@@ -184,7 +222,7 @@ function startQuiz(pool) {
 }
 
 nextBtn.addEventListener("click", next);
-document.getElementById("restartBtn").addEventListener("click", () => startQuiz(ANSWERABLE));
+document.getElementById("restartBtn").addEventListener("click", () => startQuiz(freshDeck()));
 
 const pendingEl = document.getElementById("pendingImages");
 if (pendingEl) {

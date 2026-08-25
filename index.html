@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Билеты ПДД — Кордоба, категория B</title>
-<meta name="description" content="Квиз для подготовки к теоретическому экзамену на права категории B в Кордобе, Аргентина" />
+<meta name="description" content="Подготовка к теоретическому экзамену на права категории B в Кордобе, Аргентина: список билетов, поиск и практика" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚦</text></svg>" />
 <link rel="stylesheet" href="styles.css" />
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -15,42 +15,47 @@
   Это превью в браузере. Полноценно работает внутри Telegram — открой через бота.
 </div>
 
-<header class="topbar">
+<header class="topbar home-topbar">
   <div class="title">
-    <strong>Билеты ПДД</strong>
+    <strong>🚦 Билеты ПДД</strong>
     <span>Кордоба · Категория B</span>
   </div>
-  <div class="progress-pill" id="progressPill">1/8</div>
 </header>
 
-<main>
-  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-  <p class="pending-note" id="pendingImages" hidden></p>
+<main class="home-main">
+  <form class="search-bar" id="homeSearchForm">
+    <input id="homeSearchInput" type="search" inputmode="search" placeholder="Поиск по билетам: слово, тема, номер…" autocomplete="off" />
+  </form>
 
-  <section id="quizScreen" class="quiz-screen">
-    <div class="card" id="questionCard">
-      <img class="q-image" id="qImage" alt="" hidden />
-      <p class="q-es" id="qEs"></p>
-      <p class="q-ru" id="qRu"></p>
-      <div class="options" id="options"></div>
-      <p class="note" id="note" hidden></p>
-    </div>
-    <button class="next-btn" id="nextBtn" disabled>Далее →</button>
-  </section>
+  <div class="home-cards">
+    <a class="home-card" href="browse.html">
+      <span class="home-card-emoji">📖</span>
+      <span class="home-card-body">
+        <strong>Список билетов</strong>
+        <span>Все 205 вопросов с ответами — смотреть и искать</span>
+      </span>
+    </a>
 
-  <section id="resultScreen" class="result-screen" hidden>
-    <div class="result-emoji" id="resultEmoji">🎉</div>
-    <h1 id="resultScore">8 / 8</h1>
-    <p id="resultText">Отлично! Можно идти сдавать.</p>
-    <div class="result-actions">
-      <button id="retryWrongBtn" hidden>Повторить ошибки</button>
-      <button id="restartBtn">Пройти заново</button>
-    </div>
-    <div class="review" id="review"></div>
-  </section>
+    <a class="home-card" href="practice.html?mode=all">
+      <span class="home-card-emoji">🎯</span>
+      <span class="home-card-body">
+        <strong>Практика — все билеты</strong>
+        <span>Перемешанные вопросы из всего банка, без ограничений</span>
+      </span>
+    </a>
+
+    <a class="home-card" href="practice.html?mode=exam">
+      <span class="home-card-emoji">📝</span>
+      <span class="home-card-body">
+        <strong>Практика — экзамен</strong>
+        <span>30 случайных вопросов, как на настоящем экзамене</span>
+      </span>
+    </a>
+  </div>
+
+  <p class="home-footer">Билеты категория «B», г. Кордова, 2024 г.</p>
 </main>
 
-<script src="questions.js"></script>
-<script src="app.js"></script>
+<script src="home.js"></script>
 </body>
 </html>

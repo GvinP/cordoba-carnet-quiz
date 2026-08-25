@@ -44,6 +44,19 @@ body { padding-bottom: calc(24px + var(--safe-bottom)); }
   padding: 8px 16px;
 }
 .tg-banner[hidden] { display: none; }
+.back {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border-radius: 10px;
+  flex: none;
+}
 .title { display: flex; flex-direction: column; flex: 1; line-height: 1.25; }
 .title strong { font-size: 16px; }
 .title span { font-size: 12px; color: var(--text-hint); }
@@ -78,6 +91,18 @@ main { padding: 20px 16px 0; max-width: 560px; margin: 0 auto; }
   text-align: center;
 }
 .pending-note[hidden] { display: none; }
+
+.exam-rule {
+  margin: 12px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-text);
+  background: var(--accent);
+  border-radius: 10px;
+  padding: 8px 12px;
+  text-align: center;
+}
+.exam-rule[hidden] { display: none; }
 
 .card {
   background: var(--card);
@@ -205,3 +230,109 @@ main { padding: 20px 16px 0; max-width: 560px; margin: 0 auto; }
 .review-item .a { font-size: 12px; color: var(--text-hint); }
 .review-item .a.wrong { color: var(--bad); }
 .review-item .a.right { color: var(--ok); }
+
+/* ===== Home page ===== */
+.home-topbar { justify-content: center; text-align: center; }
+.home-topbar .title { align-items: center; flex: none; }
+
+.home-main {
+  padding: 20px 16px 32px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.search-bar { margin: 4px 0 20px; }
+.search-bar input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  padding: 14px 16px;
+  border-radius: 14px;
+}
+.search-bar input::placeholder { color: var(--text-hint); }
+.search-bar input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.home-cards { display: flex; flex-direction: column; gap: 12px; }
+
+.home-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  text-decoration: none;
+  color: var(--text);
+}
+.home-card-emoji { font-size: 30px; flex: none; width: 40px; text-align: center; }
+.home-card-body { display: flex; flex-direction: column; gap: 4px; }
+.home-card-body strong { font-size: 16px; }
+.home-card-body span { font-size: 13px; color: var(--text-hint); line-height: 1.35; }
+
+.home-footer {
+  margin: 28px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-hint);
+}
+
+/* ===== Browse / ticket list page ===== */
+.browse-main {
+  padding: 16px 16px 32px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.browse-main .search-bar { margin-bottom: 16px; }
+
+.search-empty {
+  text-align: center;
+  color: var(--text-hint);
+  font-size: 14px;
+  padding: 24px 0;
+}
+.search-empty[hidden] { display: none; }
+
+.ticket-list { display: flex; flex-direction: column; gap: 14px; }
+
+.ticket-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 16px 14px;
+}
+.ticket-card[hidden] { display: none; }
+
+.ticket-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-hint);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.b-options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.b-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.b-option.b-correct { border-color: var(--ok); background: rgba(51, 204, 122, 0.1); }
+.b-option .key {
+  flex: none;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-hint);
+  min-width: 18px;
+}
+.b-option.b-correct .key { color: var(--ok); }
+.b-option .txt { display: flex; flex-direction: column; gap: 2px; }
+.b-option .es { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.b-option .ru { font-size: 12px; color: var(--text-hint); line-height: 1.3; }
